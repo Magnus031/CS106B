@@ -18,10 +18,109 @@ using namespace std;
  * TODO: Replace this comment with a descriptive function
  * header comment.
  */
+/**
+ * @brief points
+ * @details used to get the exact score from the given string.
+ * @param str
+ * @return
+ */
 int points(string str) {
     /* TODO: Implement this function. */
-    return 0;
+    int n = str.size();
+    return n>=4 ? n-3 : 0 ;
 }
+
+/**
+ * @brief DFS
+ * @param board
+ * @param m 记录的是当前DFS访问到的地方;
+ * @param score
+ * @param res 在访问GridLocation m前已经获得的字符串;
+ * @param lex
+ * @param visited
+ */
+void DFS(Grid<char>& board,GridLocation m,int &score,string &res,Lexicon& lex,Grid<bool>&visited,Set<string>&D){
+    //first to get m's location
+    int row = m.row;
+    int col = m.col;
+
+    res+=charToString(board.get(row,col));
+
+    //To prun
+    if(!lex.containsPrefix(res)){
+        visited.set(m,false);
+        return;
+    }else{
+        //have found!Record the score;
+        if(lex.contains(res)&&res.size()>=4){
+            if(!D.contains(res)){
+                score+=points(res);
+                D.add(res);
+            }
+        }
+        //DFS!
+        if(board.inBounds(row-1,col-1)&&visited.get(row-1,col-1)==false){
+            GridLocation tmp = {row-1,col-1};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row-1,col)&&visited.get(row-1,col)==false){
+            GridLocation tmp = {row-1,col};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row-1,col+1)&&visited.get(row-1,col+1)==false){
+            GridLocation tmp = {row-1,col+1};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row,col+1)&&visited.get(row,col+1)==false){
+            GridLocation tmp = {row,col+1};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row+1,col+1)&&visited.get(row+1,col+1)==false){
+            GridLocation tmp = {row+1,col+1};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row+1,col)&&visited.get(row+1,col)==false){
+            GridLocation tmp = {row+1,col};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row+1,col-1)&&visited.get(row+1,col-1)==false){
+            GridLocation tmp = {row+1,col-1};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        if(board.inBounds(row,col-1)&&visited.get(row,col-1)==false){
+            GridLocation tmp = {row,col-1};
+            visited.set(tmp,true);
+            DFS(board,tmp,score,res,lex,visited,D);
+            res.pop_back();
+            visited.set(tmp,false);
+        }
+        visited.set(m,false);
+        return ;
+    }
+
+}
+
 
 /*
  * TODO: Replace this comment with a descriptive function
@@ -29,8 +128,29 @@ int points(string str) {
  */
 int scoreBoard(Grid<char>& board, Lexicon& lex) {
     /* TODO: Implement this function. */
-    return 0;
+    int row = board.numRows();
+    int col = board.numCols();
+    Grid<bool>visited;
+    visited.resize(row,col,false);
+    Set<string>dictionary;
+    //initialize the visited matrix to false;
+    //used to record the score of the scoreBoard;
+    int score = 0;
+    for(int i=0;i<row;i++){
+        for(int j=0;j<col;j++){
+            string result="";
+            visited.fill(false);
+            GridLocation temp = {i,j};
+            visited.set(temp,true);
+            DFS(board,temp,score,result,lex,visited,dictionary);
+        }
+    }
+    for(auto it:dictionary){
+        cout<<it<<" ";
+    }
+    return score;
 }
+
 
 /* * * * * * Test Cases * * * * * */
 
@@ -95,8 +215,8 @@ PROVIDED_TEST("Test scoreBoard, full board, small number of words") {
                         {'N','J','I','H'},
                         {'Y','A','H','O'}};
     Set<string> words = { "HORIZON", "OHIA", "ORZO", "JOHN", "HAJI"};
-
-    EXPECT_EQUAL(scoreBoard(board, sharedLexicon()), 4 + 1 + 1 + 1 + 1);
+    int p = scoreBoard(board, sharedLexicon());
+    EXPECT_EQUAL(p, 4 + 1 + 1 + 1 + 1);
 }
 
 PROVIDED_TEST("Test scoreBoard, full board, medium number of words") {

@@ -40,7 +40,7 @@ int buggyCount(Vector<int> &v, int index, int sumSoFar) {
     if (index == v.size()) {
         return (sumSoFar == 0);
     } else {
-        return buggyCount(v, index + 1, sumSoFar += v[index])
+        return buggyCount(v, index + 1, sumSoFar + v[index])
              + buggyCount(v, index + 1, sumSoFar);
     }
 }
@@ -97,5 +97,7 @@ PROVIDED_TEST("Test correct countZeroSumSubsets against buggyCount") {
     EXPECT_EQUAL(countZeroSumSubsets(nums, 0, 0), buggyCount(nums, 0, 0));
 
     nums = {1, 2, 3, -4, -3, 2, 5, 1, 9, -2};
-    EXPECT_EQUAL(countZeroSumSubsets(nums, 0, 0), buggyCount(nums, 0, 0));
+    int a = countZeroSumSubsets(nums, 0, 0);
+    int b = buggyCount(nums, 0, 0);
+    EXPECT_EQUAL(a,b);
 }
