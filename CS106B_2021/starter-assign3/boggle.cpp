@@ -118,7 +118,6 @@ void DFS(Grid<char>& board,GridLocation m,int &score,string &res,Lexicon& lex,Gr
         visited.set(m,false);
         return ;
     }
-
 }
 
 
