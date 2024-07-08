@@ -21,7 +21,10 @@ using namespace std;
  * negative inputs.
  */
 int factorial(int n) {
-    if (n == 0) {
+    if(n < 0){
+        error("N should be non-negative!");
+    }
+    else if (n == 0) {
         return 1;
     } else {
         return n * factorial(n - 1);
@@ -40,13 +43,25 @@ int factorial(int n) {
  * but it has some bugs that you should find and fix. Refer to the
  * writeup for further instructions on how to do so.
  */
+
+//Exactly the problem runs across when exp's absolute value is even!
 double myPower(int base, int exp) {
     if (exp == 0) {         // handle zero exp
         return 1;
-    } else if (base == 0) { // handle zero base
+    } else if (base == 0&&exp>0) { // handle zero base
         return 0;
-    } else if (exp < 0) {   // handle negative exp
-        return 1.0 / myPower(base, -exp);
+    } else if(base==0&&exp<0){
+        return INFINITY;
+    }
+    else if (exp < 0) {   // handle negative exp
+        if(abs(exp)%2==0){
+            if(base<0)
+                return 1.0 / myPower(-base, -exp);
+            else
+                return 1.0 / myPower(base,-exp);
+        }
+        else
+            return 1.0 / myPower(base,-exp);
     } else if (base < 0) {  // handle negative base
         return -myPower(-base, exp);
     } else {                // both base and exp are positive
@@ -61,6 +76,11 @@ PROVIDED_TEST("Confirm result of factorial(7)") {
     EXPECT_EQUAL(factorial(7), 7*6*5*4*3*2);
 }
 
+PROVIDED_TEST("StudentTest - factorial"){
+
+    EXPECT_ERROR(factorial(-3));
+}
+
 PROVIDED_TEST("myPower(), compare to library pow(), fixed inputs") {
     EXPECT_EQUAL(myPower(7, 0), pow(7, 0));
     EXPECT_EQUAL(myPower(10, 2), pow(10, 2));
@@ -72,6 +92,15 @@ PROVIDED_TEST("myPower(), generated inputs") {
     for (int base = 1; base < 25; base++) {
         for (int exp = 1; exp < 10; exp++) {
             EXPECT_EQUAL(myPower(base, exp), pow(base, exp));
+        }
+    }
+}
+
+PROVIDED_TEST("mypower(),student test"){
+    for(int base = -5;base <10;base++){
+        for(int exp = -2;exp<2;exp++){
+            cout<<base<<" "<<exp<<endl;
+            EXPECT_EQUAL(myPower(base,exp),pow(base,exp));
         }
     }
 }

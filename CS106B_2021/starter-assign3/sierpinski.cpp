@@ -25,7 +25,17 @@ void fillBlackTriangle(GWindow& window, GPoint one, GPoint two, GPoint three) {
  */
 int drawSierpinskiTriangle(GWindow& window, GPoint one, GPoint two, GPoint three, int order) {
     /* TODO: Implement this function. */
-    return 0;
+    //Base case
+    if(order==0){
+        fillBlackTriangle(window,one,two,three);
+        return 1;
+    }
+    //actually the main thought is that decomposition;
+    GPoint m = {(one.x+two.x)/2,(one.y+two.y)/2};
+    GPoint n = {(one.x+three.x)/2,(one.y+three.y)/2};
+    GPoint p = {(three.x+two.x)/2,(three.y+two.y)/2};
+
+    return drawSierpinskiTriangle(window,one,m,n,order-1)+drawSierpinskiTriangle(window,m,two,p,order-1)+drawSierpinskiTriangle(window,n,p,three,order-1);
 }
 
 
