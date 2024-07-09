@@ -235,3 +235,11 @@ PROVIDED_TEST("Test scoreBoard, full board, large number of words") {
 
     EXPECT_EQUAL(scoreBoard(board, sharedLexicon()), 234);
 }
+
+PROVIDED_TEST("Test scoreBoard, full board, large number of words") {
+    Grid<char> board = {{'X','T','I','N'},
+                        {'B','I','T','T'},
+                        {'Y','A','F','E'},
+                        {'A','N','N','A'}};
+    EXPECT(scoreBoard(board,sharedLexicon())>0);
+}

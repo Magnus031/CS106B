@@ -6,14 +6,84 @@
 #include <string>      // for string class
 #include "voting.h"
 #include "testing/SimpleTest.h"
+#include "Set.h"
 using namespace std;
+
+
+/**
+ * @brief DFS
+ * @details
+ * @return
+ */
+void DFS(Vector<int>&blocks,int index,Vector<Vector<int>>&a){
+    int n = blocks.size();
+    Vector<int> temp;
+    Stack<std::pair<int, Vector<int>>> stack;
+    stack.push({0, temp});
+
+    while (!stack.isEmpty()) {
+        auto [index, temp] = stack.peek();
+        stack.pop();
+
+        if (index == n) {
+            a.add(temp);
+        } else {
+            // 不选择当前元素
+            stack.push({index + 1, temp});
+
+            // 选择当前元素
+            temp.add(blocks[index]);
+            stack.push({index + 1, temp});
+        }
+    }
+}
+
+/**
+ * @brief GetTotalVoting
+ * @return
+ */
+int GetTotalVoting(const Vector<int>blocks,Vector<int>a){
+    int sum = 0;
+    for(int i=0;i<a.size();i++)
+        sum+=blocks.get(a[i]);
+    return sum;
+}
+
+
 
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
 Vector<int> computePowerIndexes(Vector<int>& blocks)
 {
-    Vector<int> result;
-    // TODO your code here
+    Vector<int>result;
+    Vector<Vector<int>>a;
+    Vector<int>p;
+    int num = blocks.size();//record the blocks' number;
+    int total = 0;//Here total is total sum;
+    for(int i=0;i<num;i++){
+        p.add(i);
+        total+=blocks.get(i);
+        result.add(0);//initialize;
+    }
+    DFS(p,0,a);
+    for(int i=0;i<a.size();i++){
+        //对于每一个组合subset进行检验 然后把结果记录在result数组中
+        int  sum = GetTotalVoting(blocks,a.get(i));
+        if(2*sum>total){
+            Vector<int>tmp = a.get(i);
+            for(int j=0;j<tmp.size();j++){
+                if(2*(sum-blocks[tmp[j]])<=total){
+                    result[tmp[j]]++;
+                }
+            }
+        }
+    }
+    int T = 0;
+    for(int i=0;i<num;i++)
+        T+=result[i];
+    for(int i=0;i<num;i++){
+        result[i]=(int)(100*result[i])/T;
+    }
     return result;
 }
 
