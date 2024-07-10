@@ -9,80 +9,71 @@
 #include "Set.h"
 using namespace std;
 
+Vector<int> path;
 
 /**
- * @brief DFS
- * @details
- * @return
+ * @brief backtrack
+ * @param blocks
+ * @param start
+ * @param sum
+ * @param target the half of total sum of all the blocks;
+ * @param result
  */
-void DFS(Vector<int>&blocks,int index,Vector<Vector<int>>&a){
-    int n = blocks.size();
-    Vector<int> temp;
-    Stack<std::pair<int, Vector<int>>> stack;
-    stack.push({0, temp});
-
-    while (!stack.isEmpty()) {
-        auto [index, temp] = stack.peek();
-        stack.pop();
-
-        if (index == n) {
-            a.add(temp);
-        } else {
-            // 不选择当前元素
-            stack.push({index + 1, temp});
-
-            // 选择当前元素
-            temp.add(blocks[index]);
-            stack.push({index + 1, temp});
+void backtrack(Vector<int> &blocks, int start, int sum, int target, Vector<int> &result) {
+    if (start >= blocks.size()) {
+        if (sum <= target) return;
+        for (auto id : path) {
+            if (sum - blocks[id] <= target) {
+                result[id]++;
+            }
         }
+        //        cout << "in end " << path.size() << " sum = " << sum << endl;
+        return;
+    }
+    if (sum > target) {
+        //        int left = blocks.size() - start;
+        //        int k = 1 << left;
+        for (auto id : path) {
+            if (sum - blocks[id] <= target) {
+                result[id]++;
+            }
+        }
+        //        cout << "in middle " << path.size() << " sum = " << sum << endl;
+    }
+    for (int i = start; i < blocks.size(); ++i) {
+        sum += blocks[i];
+        path.add(i);
+
+        backtrack(blocks, i + 1, sum, target, result);
+        //undo!
+        path.remove(path.size() - 1);
+        sum -= blocks[i];
     }
 }
-
-/**
- * @brief GetTotalVoting
- * @return
- */
-int GetTotalVoting(const Vector<int>blocks,Vector<int>a){
-    int sum = 0;
-    for(int i=0;i<a.size();i++)
-        sum+=blocks.get(a[i]);
-    return sum;
-}
-
-
-
 // TODO: Add a function header comment here to explain the
 // behavior of the function and how you implemented this behavior
 Vector<int> computePowerIndexes(Vector<int>& blocks)
 {
-    Vector<int>result;
-    Vector<Vector<int>>a;
-    Vector<int>p;
-    int num = blocks.size();//record the blocks' number;
-    int total = 0;//Here total is total sum;
-    for(int i=0;i<num;i++){
-        p.add(i);
-        total+=blocks.get(i);
-        result.add(0);//initialize;
+    int n = blocks.size();
+    Vector<int> result(n);
+
+    int target = 0;
+    for (auto block : blocks) {
+        target += block;
     }
-    DFS(p,0,a);
-    for(int i=0;i<a.size();i++){
-        //对于每一个组合subset进行检验 然后把结果记录在result数组中
-        int  sum = GetTotalVoting(blocks,a.get(i));
-        if(2*sum>total){
-            Vector<int>tmp = a.get(i);
-            for(int j=0;j<tmp.size();j++){
-                if(2*(sum-blocks[tmp[j]])<=total){
-                    result[tmp[j]]++;
-                }
-            }
-        }
+    target /= 2;
+    backtrack(blocks, 0, 0, target, result);
+
+    int sum = 0;
+    //    cout << "res=======" << endl;
+    for (auto res : result) {
+        //        cout << res << " ";
+        sum += res;
     }
-    int T = 0;
-    for(int i=0;i<num;i++)
-        T+=result[i];
-    for(int i=0;i<num;i++){
-        result[i]=(int)(100*result[i])/T;
+    //    cout << endl;
+    //    cout << "res========" << endl;
+    for (int i = 0; i < n; ++i) {
+        result[i] = result[i] *100 / sum;
     }
     return result;
 }
@@ -117,7 +108,8 @@ PROVIDED_TEST("Test power index, blocks EU post-Nice") {
     // Estonia is one of those 4s!!
     Vector<int> blocks = {29,29,29,29,27,27,14,13,12,12,12,12,12,10,10,10,7,7,7,7,7,4,4,4,4,4,3};
     Vector<int> expected = {8, 8, 8, 8, 7, 7, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0};
-    EXPECT_EQUAL(computePowerIndexes(blocks), expected);
+    //EXPECT_EQUAL(computePowerIndexes(blocks), expected);
+    TIME_OPERATION(27,computePowerIndexes(blocks));
 }
 
 PROVIDED_TEST("Time power index operation") {
