@@ -57,10 +57,19 @@ I think Assignment2 is more interesting than 1!
 ### Assignment4:
 暂未找到相关的代码框架...GitHub上都是别人的solutions 懒得删掉重写了
 
-### Assignment5:
+### Assignment5: 
 - Memory Debugging Warmup!
 > 这个part一定要做！会让你对指针的Memory Leak有别样的理解
 - Labyrinth 送分题
 - Sorting Linked List 
 
 > 用链表实现快速排序 我感觉可以但没必要 用数组就行了
+
+### Assignment6: Huffman code
+- warmup
+- huffman code
+这个算是比较综合的一个 assignment 毕竟也是最后一个 
+这个assignment加深了我对于树的递归的理解，同时也会用到一些优先队列，也就是最小堆来build huffman tree!
+
+收官！
+
