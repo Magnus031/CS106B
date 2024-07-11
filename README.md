@@ -68,8 +68,9 @@ I think Assignment2 is more interesting than 1!
 ### Assignment6: Huffman code
 - warmup
 - huffman code
-这个算是比较综合的一个 assignment 毕竟也是最后一个 
+
+> 这个算是比较综合的一个 assignment 毕竟也是最后一个 
 这个assignment加深了我对于树的递归的理解，同时也会用到一些优先队列，也就是最小堆来build huffman tree!
 
-收官！
+**收官！**
 
