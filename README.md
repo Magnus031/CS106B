@@ -51,7 +51,7 @@ I think Assignment2 is more interesting than 1!
 > 这个找word游戏很有趣 可以巩固一下DFS的使用
 - Examining Voting Systems
 > 这个题很有必要做一下，实现起来很简单，但是重在优化，如果是常规思路，有个测试会一直超时
-因为这会遇到一个问题是： `给定一个set，需要你遍历所以的subset` 所以他的时间复杂度是$$O(2^N*N)$$ 很麻烦 
+因为这会遇到一个问题是： `给定一个set，需要你遍历所以的subset` 所以他的时间复杂度 $O(2^N*N)$ 是很麻烦 
 所以需要回溯来优化 但事实上 我用回溯也跑了90s...
 
 ### Assignment4:
